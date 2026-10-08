@@ -575,6 +575,90 @@
     </div>
   </div>
 
+<!-- ==================== MODUL ZÁVITNÍKY ==================== -->
+<style>
+.thread-card{margin-top:18px}
+.thread-controls{display:grid;grid-template-columns:repeat(3,minmax(140px,1fr));gap:12px;margin-bottom:14px}
+.thread-controls label{display:block;color:#94a3b8;font-size:.85rem;margin-bottom:5px}
+.thread-controls select{width:100%;box-sizing:border-box}
+.thread-result{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px}
+.thread-result-box{background:#111827;border:1px solid #334155;border-radius:8px;padding:10px;text-align:center}
+.thread-result-box .label{color:#94a3b8;font-size:.78rem;margin-bottom:5px}
+.thread-result-box .value{color:#facc15;font-size:1.15rem;font-weight:700}
+.thread-note{color:#94a3b8;font-size:.78rem;margin-top:10px}
+@media(max-width:700px){.thread-controls,.thread-result{grid-template-columns:1fr 1fr}}
+</style>
+
+<div class="card thread-card">
+<h2>🔩 Předvrtání pro závitník</h2>
+
+<div class="thread-controls">
+<div>
+<label for="thread_type">Typ závitníku:</label>
+<select id="thread_type" onchange="updateThreadCalc()">
+<option value="forming">Tvářecí</option>
+<option value="cutting">Řezný</option>
+</select>
+</div>
+
+<div>
+<label for="thread_size">Závit:</label>
+<select id="thread_size" onchange="updateThreadCalc()"></select>
+</div>
+
+<div>
+<label for="thread_pitch">Stoupání:</label>
+<select id="thread_pitch" onchange="updateThreadCalc()"></select>
+</div>
+</div>
+
+<div class="thread-result">
+<div class="thread-result-box">
+<div class="label">Předvrtat</div>
+<div class="value" id="thread_drill">—</div>
+</div>
+<div class="thread-result-box">
+<div class="label">Řezná rychlost</div>
+<div class="value" id="thread_vc">—</div>
+</div>
+<div class="thread-result-box">
+<div class="label">Otáčky</div>
+<div class="value" id="thread_rpm">—</div>
+</div>
+<div class="thread-result-box">
+<div class="label">Závit</div>
+<div class="value" id="thread_display">—</div>
+</div>
+</div>
+
+<div class="thread-note">
+Tvářecí: pevné hodnoty. Řezné: předvrtání = D − P.
+Otáčky: n = (Vc × 1000) / (π × D).
+</div>
+</div>
+
+<script>
+const FORMING_DRILLS={
+"M3":2.80,"M4":3.70,"M5":4.65,"M6":5.55,
+"M8":7.40,"M10":9.30,"M12":11.20,"M14":13.10,"M16":15.10
+};
+
+const THREADS={
+"M3":{d:3,pitches:[0.5]},
+"M4":{d:4,pitches:[0.7]},
+"M5":{d:5,pitches:[0.8]},
+"M6":{d:6,pitches:[1.0]},
+"M8":{d:8,pitches:[1.25,1.0]},
+"M10":{d:10,pitches:[1.5,1.25,1.0]},
+"M12":{d:12,pitches:[1.75,1.5,1.25]},
+"M14":{d:14,pitches:[2.0,1.5,1.25]},
+"M16":{d:16,pitches:[2.0,1.5,1.0]},
+"M18":{d:18,pitches:[2.5,2.0,1.5,1.0]},
+"M20":{d:20,pitches:[2.5,2.0,1.5]},
+"M22":{d:22,pitches:[2.5,2.0,1.5]},
+"M24":{d:24,pitches:[3.0,2.0,1.5]}
+};
+	
 
   <!-- 8. HMOTNOST MATERIÁLU -->
   <div class="card">
