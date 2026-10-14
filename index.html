@@ -299,6 +299,8 @@
 
 <div class="container">
   <h1>🛠️ Novogearská příručka malého soustružníka🛠️</h1>
+  
+ 
 
   <!-- 1. PRAVOÚHLÝ TROJÚHELNÍK -->
   <div class="card">
@@ -646,7 +648,46 @@
       </div>
     </div>
   </div>
+<div class="card">
+  <h2><span>⭕</span> Souřadnice Děr</h2>
+  
+  <!-- Hlavní kontejner, který to rozdělí na 2 sloupce (levý a pravý) -->
+  <div class="trigo-container">
+    
+    <!-- LEVÁ STRANA: Zde jsou VŠECHNA vstupní políčka pohromadě -->
+    <div class="trigo-left">
+      
+      <div class="row">
+        <label for="prumerRK">Průměr roztečné kružnice (mm):</label>
+        <input type="number" id="prumerRK" value="400" step="0.001">
+      </div>
+      
+      <div class="row">
+        <label for="pocetDier">Počet děr:</label>
+        <input type="number" id="pocetDier" value="20" step="1">
+      </div>
+      
+      <div class="row">
+        <label for="krokUhlu">Úhlová rozteč mezi dírami (°):</label>
+        <input type="number" id="krokUhlu" value="18" step="0.001">
+      </div>
+      
+      <div class="row">
+        <label for="posunY">Počáteční pootočení od osy Y (°):</label>
+        <input type="number" id="posunY" value="5" step="0.001">
+      </div>
 
+    </div>
+    
+    <!-- PRAVÁ STRANA: Tlačítko a výsledný G-kód -->
+    <div class="trigo-right" style="width: 100%;">
+      <button onclick="generujGCode()" class="btn-primary" style="width: 100%; margin-bottom: 12px;">Vyplivni souřadnice</button>
+      
+      <textarea id="vystupGCode" class="gcode-box" style="width: 100%; height: 140px;" readonly placeholder="Zde budou souřadnice"></textarea>
+    </div>
+
+  </div>
+</div>
   <!-- 9. STŘEDICÍ DŮLKY DIN 332 -->
   <div class="card">
     <h2>🎯 Středicí důlky DIN 332</h2>
@@ -675,6 +716,8 @@
   </div>
 
 </div>
+
+
 
 <script>
   var machiningMode = 'vc';
@@ -1440,7 +1483,40 @@ var fmtR = function(val) { return 'R' + fmtFanuc(val); };
     updateThreadPitches();
     updateThreadCalc();
   })();
+function generujGCode() {
+    // 1. Načteme hodnoty z formuláře
+    let prumer = parseFloat(document.getElementById('prumerRK').value);
+    let pocet = parseInt(document.getElementById('pocetDier').value);
+    let krok = parseFloat(document.getElementById('krokUhlu').value);
+    let posunY = parseFloat(document.getElementById('posunY').value);
 
+    // 2. NOVÁ CHYTROLÍNSKÁ PODMÍNKA:
+    // Pokud je úhlový krok 0 (nebo nevyplněný), spočítáme rovnoměrný rozestup
+    if (!krok || krok === 0) {
+        krok = 360 / pocet;
+        // Zapíšeme vypočítanou hodnotu zpět do políčka, ať to uživatel vidí
+        document.getElementById('krokUhlu').value = krok;
+    }
+
+    let polomer = prumer / 2;
+    let vystup = "";
+
+    // Tady pokračuje váš dosavadní kód pro generování souřadnic a G-kódu...
+    // Příklad smyčky pro výpočet:
+    for (let i = 0; i < pocet; i++) {
+        let uhelStupne = posunY + (i * krok);
+        let uhelRadiany = uhelStupne * (Math.PI / 180);
+        
+        let x = polomer * Math.sin(uhelRadiany);
+        let y = polomer * Math.cos(uhelRadiany);
+
+        // Formátování do výstupu...
+        vystup += `X${x.toFixed(3)} Y${y.toFixed(3)}\n`;
+    }
+
+    // Vložení výsledku do textového pole
+    document.getElementById('vystupGCode').value = vystup;
+}
 </script>
 
 </body>
